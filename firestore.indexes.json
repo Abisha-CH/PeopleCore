@@ -1,0 +1,19 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "payslips",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "payslips",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "payslipId", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
