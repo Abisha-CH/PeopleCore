@@ -15,7 +15,13 @@ import {
   provisionEmployee,
   updateAuthEmail,
 } from "../services/provisioning";
-import { fetchEmployee, toEmployee } from "../services/employees";
+import {
+  fetchEmployee,
+  toEmployee,
+  buildEmployeeNameMap,
+  attachLineManagerNames,
+  resolveLineManagerName,
+} from "../services/employees";
 import type { EmployeeRecord } from "../types";
 import { writeRoute } from "./write";
 
@@ -149,6 +155,10 @@ const listEmployees: RequestHandler = async (req, res) => {
     employees = employees.filter((e) => e.department === department);
   }
 
+  // Resolve lineManagerId -> fullName from the same snapshot (no extra reads).
+  const namesById = buildEmployeeNameMap(snap.docs);
+  employees = attachLineManagerNames(employees, namesById);
+
   employees.sort((a, b) => a.fullName.localeCompare(b.fullName));
 
   res.json({ employees, total: employees.length });
@@ -182,7 +192,10 @@ const getEmployee: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    res.json({ employee });
+    // Resolve the line manager's name (one extra read, only when assigned).
+    const withManager = await resolveLineManagerName(employee);
+
+    res.json({ employee: withManager });
   } catch (err) {
     next(err);
   }

@@ -3,6 +3,7 @@ import { Loader2 } from "lucide-react";
 
 import { useAuth } from "@/providers/auth-provider";
 import { AppShell } from "@/components/layout/app-shell";
+import { FirebaseConfigError } from "@/components/auth/firebase-config-error";
 
 export function ProtectedRoute() {
   const { user, initializing, configError } = useAuth();
@@ -11,10 +12,9 @@ export function ProtectedRoute() {
   if (configError) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background px-4">
-        <p className="max-w-sm text-center text-sm text-muted-foreground">
-          Firebase is not configured. Add your Firebase project details to a{" "}
-          <code>.env</code> file in the frontend.
-        </p>
+        <div className="w-full max-w-md">
+          <FirebaseConfigError />
+        </div>
       </div>
     );
   }

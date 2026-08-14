@@ -82,9 +82,10 @@ export function AppRoutes() {
         <Route path="/my-leave" element={<MyLeavePage />} />
         <Route path="/my-profile" element={<MyProfilePage />} />
         <Route path="/my-payslips" element={<MyPayslipsPage />} />
-      </Route>
 
-      <Route path="*" element={<NotFoundPage />} />
+        {/* 404 inside the shell so authenticated users keep nav context */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
     </Routes>
   );
 }

@@ -9,6 +9,7 @@ import {
   makeToken,
   resetMock,
   createdUsers,
+  db,
 } from "./helpers/firebase-mock";
 
 const app = createApp();
@@ -47,6 +48,31 @@ async function create(overrides: Record<string, unknown> = {}) {
     .set("Authorization", `Bearer ${adminToken}`)
     .send({ ...baseEmployee, ...overrides });
   return res;
+}
+
+/**
+ * Seeds a full manager employee record (same uid in Auth with manager claims
+ * and in the employees collection) so line manager names can be resolved.
+ */
+async function seedManagerDoc(uid: string, fullName: string) {
+  createdUsers.push({
+    uid,
+    email: `${uid}@example.com`,
+    claims: { role: "manager" },
+  });
+  await db.collection("employees").doc(uid).set({
+    employeeId: uid,
+    fullName,
+    email: `${uid}@example.com`,
+    phone: "+234-000-000-0000",
+    department: "Operations",
+    jobTitle: "Manager",
+    employmentRole: "full-time",
+    startDate: "2023-01-10",
+    status: "active",
+    nationalId: `NID-${uid.toUpperCase()}`,
+    address: "10 Manager Lane, Lagos",
+  });
 }
 
 // ---- POST /api/employees ---------------------------------------------------
@@ -446,6 +472,77 @@ describe("DELETE /api/employees/:id", () => {
       .delete(`/api/employees/${created.employeeId}`)
       .set("Authorization", `Bearer ${employeeToken}`);
     expect(res.status).toBe(403);
+  });
+});
+
+// ---- Line manager name resolution ------------------------------------------
+
+describe("line manager name resolution", () => {
+  it("resolves lineManagerName on the employee list (no raw IDs)", async () => {
+    await seedManagerDoc("lm-1", "Bola Manager");
+    const created = (await create({ lineManagerId: "lm-1" })).body.employee;
+
+    const res = await request(app)
+      .get("/api/employees")
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+
+    const alice = res.body.employees.find(
+      (e: { employeeId: string }) => e.employeeId === created.employeeId,
+    );
+    expect(alice).toBeDefined();
+    expect(alice.lineManagerId).toBe("lm-1");
+    expect(alice.lineManagerName).toBe("Bola Manager");
+  });
+
+  it("resolves lineManagerName on a single employee record", async () => {
+    await seedManagerDoc("lm-1", "Bola Manager");
+    const created = (await create({ lineManagerId: "lm-1" })).body.employee;
+
+    const res = await request(app)
+      .get(`/api/employees/${created.employeeId}`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body.employee.lineManagerId).toBe("lm-1");
+    expect(res.body.employee.lineManagerName).toBe("Bola Manager");
+  });
+
+  it("omits lineManagerName when no line manager is assigned", async () => {
+    const created = (await create()).body.employee;
+
+    const res = await request(app)
+      .get(`/api/employees/${created.employeeId}`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body.employee.lineManagerId).toBeUndefined();
+    expect(res.body.employee).not.toHaveProperty("lineManagerName");
+  });
+
+  it("degrades gracefully when the line manager record is missing", async () => {
+    createdUsers.push({
+      uid: "lm-ghost",
+      email: "ghost@example.com",
+      claims: { role: "manager" },
+    });
+    const created = (await create({ lineManagerId: "lm-ghost" })).body.employee;
+
+    const res = await request(app)
+      .get(`/api/employees/${created.employeeId}`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body.employee.lineManagerId).toBe("lm-ghost");
+    expect(res.body.employee.lineManagerName).toBeUndefined();
+  });
+
+  it("keeps lineManagerId (the relationship) intact even when the name resolves", async () => {
+    await seedManagerDoc("lm-1", "Bola Manager");
+    const created = (await create({ lineManagerId: "lm-1" })).body.employee;
+
+    const res = await request(app)
+      .get(`/api/employees/${created.employeeId}`)
+      .set("Authorization", `Bearer ${adminToken}`);
+    // The stored relationship must survive — the UI needs the ID for editing.
+    expect(res.body.employee.lineManagerId).toBe("lm-1");
   });
 });
 

@@ -62,8 +62,8 @@ function NavLinkButton({
       mobile ? "h-11" : "h-9",
       rail ? "justify-center" : "px-3",
       isActive
-        ? "bg-brand-50 font-medium text-brand-700"
-        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900",
+        ? "bg-muted font-medium text-foreground"
+        : "text-muted-foreground hover:bg-muted hover:text-foreground",
     );
 
   const link = (
@@ -83,7 +83,13 @@ function NavLinkButton({
               )}
             />
           )}
-          <Icon className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
+          <Icon
+            className={cn(
+              "shrink-0",
+              rail ? "h-5 w-5" : "h-[18px] w-[18px]",
+            )}
+            aria-hidden="true"
+          />
           {!rail && <span className="truncate">{label}</span>}
         </>
       )}
@@ -92,7 +98,7 @@ function NavLinkButton({
 
   if (rail) {
     return (
-      <Tooltip>
+      <Tooltip delayDuration={0}>
         <TooltipTrigger asChild>{link}</TooltipTrigger>
         <TooltipContent side="right" sideOffset={12}>
           {label}
@@ -141,20 +147,23 @@ function SidebarContent({
       {/* Navigation */}
       <nav
         aria-label="Main navigation"
-        className="flex-1 space-y-6 overflow-y-auto px-3 py-5"
+        className={cn(
+          "flex-1 overflow-y-auto px-3 py-5",
+          rail ? "space-y-4" : "space-y-6",
+        )}
       >
-        {sections.map((section) => (
+        {sections.map((section, index) => (
           <div key={section.title}>
             {!rail ? (
               <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 {section.title}
               </p>
-            ) : (
+            ) : index > 0 ? (
               <div
-                className="mx-auto mb-3 h-px w-6 bg-border"
+                className="mx-auto mb-2 h-px w-5 bg-border"
                 aria-hidden="true"
               />
-            )}
+            ) : null}
             <div className="space-y-0.5">
               {section.items.map((item) => (
                 <NavLinkButton
@@ -174,18 +183,18 @@ function SidebarContent({
 
       {/* Collapse toggle (desktop only) */}
       {canCollapse && onToggleCollapse && (
-        <div className="border-t border-border/60 p-2">
+        <div className="border-t border-border/60 px-3 py-2">
           <Button
             variant="ghost"
             onClick={onToggleCollapse}
             aria-label={rail ? "Expand sidebar" : "Collapse sidebar"}
             className={cn(
-              "h-9 w-full justify-start gap-2.5 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-900",
+              "h-9 w-full justify-start gap-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground",
               rail && "justify-center",
             )}
           >
             {rail ? (
-              <PanelLeftOpen className="h-[18px] w-[18px]" aria-hidden="true" />
+              <PanelLeftOpen className="h-5 w-5" aria-hidden="true" />
             ) : (
               <PanelLeftClose className="h-[18px] w-[18px]" aria-hidden="true" />
             )}
@@ -196,7 +205,12 @@ function SidebarContent({
 
       {/* Footer / user */}
       <div className="border-t border-border/60 p-3">
-        <div className={cn("flex items-center gap-2.5", rail && "justify-center")}>
+        <div
+          className={cn(
+            "flex items-center gap-2.5",
+            rail && "flex-col justify-center gap-1.5",
+          )}
+        >
           <Avatar className="h-9 w-9">
             <AvatarFallback>{getInitials(displayName ?? email)}</AvatarFallback>
           </Avatar>
@@ -216,7 +230,10 @@ function SidebarContent({
             title="Sign out"
             className="h-9 w-9 shrink-0 text-muted-foreground hover:text-foreground"
           >
-            <LogOut className="h-[18px] w-[18px]" aria-hidden="true" />
+            <LogOut
+              className={rail ? "h-5 w-5" : "h-[18px] w-[18px]"}
+              aria-hidden="true"
+            />
           </Button>
         </div>
       </div>
@@ -300,6 +317,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           role="dialog"
           aria-modal="true"
           aria-label="Navigation"
+          inert={!mobileOpen}
           className={cn(
             "fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-card shadow-xl transition-transform duration-normal ease-emphasized",
             mobileOpen ? "translate-x-0" : "-translate-x-full",

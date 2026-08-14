@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
+import { Mail, MapPin, Phone, ShieldCheck, UserRound } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { EmployeeStatusBadge } from "@/components/status-badge";
-import { formatDate, getInitials } from "@/lib/format";
+import { formatDate, getInitials, lineManagerLabel } from "@/lib/format";
 import type { EmployeeRecord } from "@/lib/types";
 
 /*
@@ -109,7 +109,13 @@ export function EmployeeDetailDialog({
             </span>
           </DetailRow>
           <DetailRow label="Line manager">
-            {employee.lineManagerId ?? "None"}
+            <span className="inline-flex items-center gap-1.5">
+              <UserRound
+                className="h-3.5 w-3.5 text-muted-foreground"
+                aria-hidden="true"
+              />
+              {lineManagerLabel(employee)}
+            </span>
           </DetailRow>
           <DetailRow label="Emergency contact">
             {employee.emergencyContact

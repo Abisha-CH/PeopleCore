@@ -3,6 +3,20 @@
  * API makes that free, falling back to simple implementations for initials.
  */
 
+/**
+ * Human-readable line manager label. Never renders a raw ID: resolved names
+ * come from the API (`lineManagerName`); a broken reference degrades to
+ * "Manager unavailable", and no assignment to "No manager assigned".
+ */
+export function lineManagerLabel(employee: {
+  lineManagerId?: string;
+  lineManagerName?: string;
+}): string {
+  if (employee.lineManagerName) return employee.lineManagerName;
+  if (employee.lineManagerId) return "Manager unavailable";
+  return "No manager assigned";
+}
+
 /** "Alice Johnson" → "AJ"; single names → first two letters. */
 export function getInitials(name: string | null | undefined): string {
   const parts = (name ?? "").trim().split(/\s+/).filter(Boolean);

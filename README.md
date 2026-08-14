@@ -90,7 +90,11 @@ PORT=4000
 
 ### Frontend (`frontend/.env.local`)
 
-Vite reads `.env.local` from the **frontend project root** (`frontend/`), not from `src/`. There is no `.env.example` committed for the frontend — create the file:
+Vite reads `.env.local` from the **frontend project root** (`frontend/`), not from `src/`. Start from the committed template:
+
+```bash
+cp frontend/.env.example frontend/.env.local
+```
 
 ```bash
 # frontend/.env.local
@@ -156,7 +160,7 @@ Run everything from the repository root:
 | `npm test` | Vitest across both workspaces |
 | `npm run build` | Production build of both workspaces |
 
-Per-workspace variants exist for each (`test:backend`, `build:frontend`, etc.). The backend suite (350 tests) runs against an in-memory Firestore mock, so no live Firebase connection is needed.
+Per-workspace variants exist for each (`test:backend`, `build:frontend`, etc.). The backend suite (370 tests) runs against an in-memory Firestore mock, so no live Firebase connection is needed.
 
 ## Roles & permissions
 

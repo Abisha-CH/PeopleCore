@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Mail, MapPin, Pencil, Phone, ShieldCheck } from "lucide-react";
+import {
+  Info,
+  Loader2,
+  Mail,
+  MapPin,
+  Pencil,
+  Phone,
+  ShieldCheck,
+  UserRound,
+} from "lucide-react";
 import { z } from "zod";
 
 import { PageHeader } from "@/components/page-header";
@@ -35,17 +44,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { EmployeeStatusBadge } from "@/components/status-badge";
 import { useEmployee, useUpdateOwnPhone } from "@/hooks/use-employees";
-import { formatDate, getInitials } from "@/lib/format";
+import { ApiError } from "@/lib/api";
+import { formatDate, getInitials, lineManagerLabel } from "@/lib/format";
 import { useAuth } from "@/providers/auth-provider";
 import type { EmployeeRecord } from "@/lib/types";
 
 /*
- * MyProfilePage — an employee's view of their own record.
+ * MyProfilePage — a user's view of their own record.
  *
- * Everything is read-only except the phone number, which is the only
- * self-service field the backend allows. The line manager shows as
- * "Assigned"/"Not assigned" because non-admin users cannot resolve other
- * employee records to a name.
+ * - HR Admin: shows the full employee record when one is linked. Admins whose
+ *   account has no Employee document (e.g. bootstrapped via the CLI script)
+ *   get an account-level profile instead — never a raw "Employee not found".
+ * - Employee / Line Manager: everything is read-only except the phone number,
+ *   which is the only self-service field the backend allows. The line manager
+ *   shows as a resolved name (or a graceful "not assigned / unavailable"
+ *   fallback), never a raw Firebase ID.
  */
 
 const EMPLOYMENT_ROLE_LABELS: Record<string, string> = {
@@ -55,11 +68,29 @@ const EMPLOYMENT_ROLE_LABELS: Record<string, string> = {
 };
 
 export function MyProfilePage() {
-  const { user } = useAuth();
+  const { user, role, displayName, email } = useAuth();
   const employeeId = user?.uid ?? null;
 
   const profileQuery = useEmployee(employeeId);
   const [phoneOpen, setPhoneOpen] = useState(false);
+
+  const recordMissing =
+    profileQuery.isError &&
+    profileQuery.error instanceof ApiError &&
+    profileQuery.error.status === 404;
+
+  // HR Admin without an Employee record: show the account profile instead of
+  // an error page. Employees/managers keep the error state — for them a
+  // missing record is a real data problem.
+  if (role === "admin" && recordMissing) {
+    return (
+      <AdminAccountView
+        displayName={displayName}
+        email={email}
+        onRetry={() => void profileQuery.refetch()}
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -160,7 +191,13 @@ export function MyProfilePage() {
                       <EmployeeStatusBadge status={employee.status} />
                     </ProfileRow>
                     <ProfileRow label="Line manager">
-                      {employee.lineManagerId ? "Assigned" : "Not assigned"}
+                      <span className="inline-flex items-center gap-1.5">
+                        <UserRound
+                          className="h-3.5 w-3.5 text-muted-foreground"
+                          aria-hidden="true"
+                        />
+                        {lineManagerLabel(employee)}
+                      </span>
                     </ProfileRow>
                   </dl>
                 </CardContent>
@@ -211,6 +248,135 @@ export function MyProfilePage() {
           onOpenChange={setPhoneOpen}
         />
       )}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Admin account profile (no employee record)                                  */
+/* -------------------------------------------------------------------------- */
+
+interface AdminAccountViewProps {
+  displayName: string | null;
+  email: string | null;
+  onRetry: () => void;
+}
+
+/**
+ * Account-level profile for an HR Admin whose account has no linked Employee
+ * record. Shows only data that actually exists on the auth account — name,
+ * email, role, account status — and explicitly explains why employee-only
+ * fields are missing. No fabricated employee data.
+ */
+function AdminAccountView({
+  displayName,
+  email,
+  onRetry,
+}: AdminAccountViewProps) {
+  const name = displayName ?? email ?? "HR Admin";
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title="My Profile"
+        description="Your account information."
+      />
+
+      <Card className="overflow-hidden">
+        <div className="h-24 bg-gradient-to-br from-brand-50 via-slate-50 to-teal-50" />
+        <CardContent className="pt-0">
+          <div className="-mt-12 flex flex-wrap items-end justify-between gap-4">
+            <div className="flex items-end gap-4">
+              <Avatar className="h-20 w-20 ring-4 ring-background">
+                <AvatarFallback className="text-lg">
+                  {getInitials(name)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="pb-0.5">
+                <h2 className="text-xl font-semibold tracking-tight text-foreground">
+                  {name}
+                </h2>
+                <p className="mt-0.5 text-sm text-muted-foreground">
+                  {email}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 pb-0.5">
+              <Badge variant="neutral">
+                <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                HR Admin
+              </Badge>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Account details</CardTitle>
+            <CardDescription>
+              Information stored on your sign-in account.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <dl className="divide-y divide-border border-t border-border">
+              <ProfileRow label="Display name">
+                {displayName ?? "—"}
+              </ProfileRow>
+              <ProfileRow label="Email">
+                <span className="inline-flex items-center gap-1.5">
+                  <Mail
+                    className="h-3.5 w-3.5 text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                  {email}
+                </span>
+              </ProfileRow>
+              <ProfileRow label="Role">HR Admin</ProfileRow>
+              <ProfileRow label="Account status">
+                <EmployeeStatusBadge status="active" />
+              </ProfileRow>
+            </dl>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Employee record</CardTitle>
+            <CardDescription>
+              Your account and your HR record.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-start gap-3 rounded-lg border border-info/20 bg-info/5 p-4">
+              <Info
+                className="mt-0.5 h-4 w-4 shrink-0 text-sky-600"
+                aria-hidden="true"
+              />
+              <div>
+                <p className="text-sm font-medium text-foreground">
+                  No employee record is linked to this account
+                </p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  Employee-only details such as department, job title and pay
+                  aren&apos;t available until this account is linked to an
+                  employee record in People. You can still access the admin
+                  features below.
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-4"
+              onClick={onRetry}
+            >
+              Check again
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

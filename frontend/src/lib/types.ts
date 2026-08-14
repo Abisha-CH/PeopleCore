@@ -29,6 +29,8 @@ export interface EmployeeRecord {
   address: string;
   emergencyContact?: EmergencyContact;
   lineManagerId?: string;
+  /** Resolved by the API: fullName of the assigned line manager. */
+  lineManagerName?: string;
 }
 
 export interface LeaveType {

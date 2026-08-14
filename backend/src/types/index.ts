@@ -67,6 +67,13 @@ export interface EmployeeRecord {
   address: string;
   emergencyContact?: EmergencyContact;
   lineManagerId?: string;
+  /**
+   * Presentation field: fullName of the employee referenced by
+   * `lineManagerId`, resolved at read time so UIs never render a raw
+   * ID. Undefined when no manager is assigned or the reference is broken.
+   * The ID itself remains the source of truth for the relationship.
+   */
+  lineManagerName?: string;
 }
 
 // ---- Leave -----------------------------------------------------------------

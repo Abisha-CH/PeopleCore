@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { api, buildQuery } from "@/lib/api";
-import { getErrorMessage } from "@/lib/api";
+import { api, buildQuery, getErrorMessage } from "@/lib/api";
+import { ApiError } from "@/lib/api";
 import type {
   LeaveType,
   LeaveRequest,
@@ -250,7 +250,15 @@ export function useCreateLeaveRequest() {
       void qc.invalidateQueries({ queryKey: leaveKeys.requests });
       toast.success("Leave request submitted");
     },
-    onError: (err: Error) => toast.error(getErrorMessage(err)),
+    onError: (err: Error) => {
+      if (err instanceof ApiError && err.code === "NO_ENTITLEMENT") {
+        toast.error(
+          "No leave entitlement is configured for this leave type. Ask your HR admin to set one up in Leave Settings, or choose another leave type.",
+        );
+        return;
+      }
+      toast.error(getErrorMessage(err));
+    },
   });
 }
 

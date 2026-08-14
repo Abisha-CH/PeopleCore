@@ -17,6 +17,8 @@ import { useAuth } from "@/providers/auth-provider";
 import { useSetupStatus } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { FirebaseConfigError } from "@/components/auth/firebase-config-error";
 import {
   Form,
   FormControl,
@@ -156,7 +158,7 @@ function RoleSelector({
                     "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition",
                     active
                       ? "border-primary bg-primary text-white"
-                      : "border-slate-300 text-transparent",
+                      : "border-muted-foreground/30 text-transparent",
                   )}
                 >
                   <Check className="h-3.5 w-3.5" />
@@ -286,12 +288,7 @@ export function LoginPage() {
             <BrandMark compact />
           </div>
 
-          {configError && (
-            <p className="mb-4 rounded-md border border-destructive-200 bg-destructive-50 px-3 py-2 text-sm text-destructive-800">
-              Firebase is not configured. Add your Firebase project details to a{" "}
-              <code className="text-xs">.env</code> file in the frontend.
-            </p>
-          )}
+          {configError && <FirebaseConfigError />}
 
           {!selectedRole ? (
             <RoleSelector
@@ -364,12 +361,11 @@ export function LoginPage() {
                   />
 
                   {error && (
-                    <p
-                      className="rounded-md border border-destructive-200 bg-destructive-50 px-3 py-2 text-sm text-destructive-800"
-                      role="alert"
-                    >
-                      {error}
-                    </p>
+                    <Alert variant="destructive" className="p-3 text-sm">
+                      <AlertDescription className="text-sm">
+                        {error}
+                      </AlertDescription>
+                    </Alert>
                   )}
 
                   <Button
@@ -441,22 +437,24 @@ export function LoginPage() {
                   />
 
                   {resetSent && (
-                    <p
-                      className="rounded-md border border-success-200 bg-success-50 px-3 py-2 text-sm text-success-800"
+                    <Alert
+                      variant="success"
                       role="status"
+                      className="p-3 text-sm"
                     >
-                      If an account exists for that email, a reset link has been
-                      sent.
-                    </p>
+                      <AlertDescription className="text-sm">
+                        If an account exists for that email, a reset link has
+                        been sent.
+                      </AlertDescription>
+                    </Alert>
                   )}
 
                   {error && (
-                    <p
-                      className="rounded-md border border-destructive-200 bg-destructive-50 px-3 py-2 text-sm text-destructive-800"
-                      role="alert"
-                    >
-                      {error}
-                    </p>
+                    <Alert variant="destructive" className="p-3 text-sm">
+                      <AlertDescription className="text-sm">
+                        {error}
+                      </AlertDescription>
+                    </Alert>
                   )}
 
                   <Button
