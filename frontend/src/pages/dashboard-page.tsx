@@ -75,9 +75,9 @@ function QuickActions({
             <Link
               key={to}
               to={to}
-              className="group flex items-start gap-3 rounded-lg border border-border bg-card p-4 transition-colors hover:border-brand-200 hover:bg-brand-50/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+              className="group flex items-start gap-3 rounded-lg border border-border/80 bg-card p-4 shadow-xs transition-all duration-fast hover:-translate-y-0.5 hover:border-brand-200 hover:bg-brand-50/50 hover:shadow-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
             >
-              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-brand-50 text-brand-600 transition-colors group-hover:bg-brand-100">
+              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-brand-50 text-brand-600 shadow-sm transition-all duration-fast group-hover:bg-brand-600 group-hover:text-white group-hover:shadow-md group-hover:shadow-brand-600/30">
                 <Icon className="h-4.5 w-4.5" aria-hidden="true" />
               </span>
               <span className="min-w-0">
@@ -124,7 +124,7 @@ function AttentionList({ items }: { items: AttentionItem[] }) {
             <li key={label}>
               <Link
                 to={to}
-                className="group flex items-center justify-between gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:border-brand-200 hover:bg-brand-50/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+                className="group flex items-center justify-between gap-4 rounded-lg border border-border/80 bg-card p-4 shadow-xs transition-all duration-fast hover:-translate-y-0.5 hover:border-brand-200 hover:bg-brand-50/50 hover:shadow-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
               >
                 <span className="min-w-0">
                   <span className="text-sm font-medium text-foreground">
@@ -251,7 +251,7 @@ function ManagerDashboardView({ data }: { data: ManagerDashboard }) {
 
       <div className="grid gap-6 lg:grid-cols-2">
         {data.pendingDirectReportLeaveCount > 0 ? (
-          <Card className="border-warning/30 bg-warning-50/40">
+          <Card className="border-warning/30 bg-gradient-to-br from-warning-50/70 to-card">
             <CardHeader>
               <CardTitle>Review queue</CardTitle>
               <CardDescription>
@@ -263,7 +263,7 @@ function ManagerDashboardView({ data }: { data: ManagerDashboard }) {
             <CardContent>
               <Link
                 to="/leave-approvals"
-                className="inline-flex items-center gap-2 rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+                className="inline-flex items-center gap-2 rounded-md bg-brand-gradient px-4 py-2 text-sm font-medium text-white shadow-glow-primary transition-all duration-fast hover:brightness-105 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
               >
                 Open leave approvals
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />

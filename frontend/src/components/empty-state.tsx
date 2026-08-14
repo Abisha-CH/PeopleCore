@@ -36,9 +36,9 @@ export function EmptyState({
     >
       <div
         className={cn(
-          "flex h-12 w-12 items-center justify-center rounded-full",
+          "flex h-12 w-12 items-center justify-center rounded-full shadow-sm transition-transform duration-fast",
           tone === "brand"
-            ? "bg-brand-50 text-brand-600"
+            ? "bg-brand-gradient text-white shadow-brand-600/30"
             : "bg-muted text-muted-foreground",
         )}
       >

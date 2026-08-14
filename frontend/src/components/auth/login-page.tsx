@@ -60,7 +60,7 @@ function BrandMark({ compact = false }: { compact?: boolean }) {
         compact ? "mb-6" : "mb-8",
       )}
     >
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-teal-600 text-lg font-bold text-white shadow-sm">
+      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-gradient text-lg font-bold text-white shadow-md shadow-brand-600/30">
         P
       </div>
       <span className="text-lg font-semibold text-foreground">PeopleCore</span>
@@ -129,18 +129,18 @@ function RoleSelector({
                 aria-checked={active}
                 onClick={() => onSelect(role)}
                 className={cn(
-                  "group flex w-full items-center gap-4 rounded-xl border p-4 text-left transition",
+                  "group flex w-full items-center gap-4 rounded-xl border p-4 text-left transition-all duration-fast hover:-translate-y-0.5",
                   active
-                    ? "border-primary bg-primary/5 ring-1 ring-primary/30"
-                    : "border-border bg-card hover:border-primary/50 hover:bg-primary/[0.03]",
+                    ? "border-primary bg-gradient-to-br from-brand-50/80 to-card shadow-card-hover ring-1 ring-primary/25"
+                    : "border-border bg-card hover:border-primary/40 hover:bg-primary/[0.03] hover:shadow-card-hover",
                 )}
               >
                 <span
                   className={cn(
-                    "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition",
+                    "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm transition-all duration-fast",
                     active
-                      ? "bg-primary text-white"
-                      : "bg-brand-50 text-brand-700 group-hover:bg-primary/10 group-hover:text-primary",
+                      ? "bg-brand-gradient text-white shadow-md shadow-brand-600/30"
+                      : "bg-brand-50 text-brand-700 group-hover:bg-brand-100 group-hover:text-brand-700",
                   )}
                 >
                   <Icon className="h-5 w-5" />
@@ -240,9 +240,37 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Brand panel (desktop) */}
-      <aside className="relative hidden w-[440px] shrink-0 flex-col justify-between overflow-hidden bg-gradient-to-br from-brand-800 via-brand-700 to-teal-700 p-10 text-white lg:flex">
+    <div className="flex min-h-screen bg-transparent">
+      {/* Brand panel (desktop) — deep gradient field with decorative shapes */}
+      <aside className="relative hidden w-[460px] shrink-0 flex-col justify-between overflow-hidden bg-brand-gradient-strong p-10 text-white lg:flex">
+        {/* Atmosphere: soft glowing orbs */}
+        <div
+          className="pointer-events-none absolute -right-28 -top-28 h-80 w-80 rounded-full bg-violet-500/30 blur-3xl"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-sky-500/25 blur-3xl"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute right-24 top-1/2 h-40 w-40 rounded-full bg-teal-400/20 blur-3xl"
+          aria-hidden="true"
+        />
+        {/* Decorative rings */}
+        <div
+          className="pointer-events-none absolute -left-28 bottom-1/4 h-[420px] w-[420px] rounded-full border border-white/10"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute -left-16 bottom-[38%] h-[300px] w-[300px] rounded-full border border-white/10"
+          aria-hidden="true"
+        />
+        {/* Fine dot grid overlay */}
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.14)_1px,transparent_1px)] [background-size:24px_24px] opacity-60"
+          aria-hidden="true"
+        />
+
         <div className="relative flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-sm font-bold backdrop-blur">
             P
@@ -274,6 +302,35 @@ export function LoginPage() {
               </li>
             ))}
           </ul>
+
+          {/* Floating pseudo-metric chip — pure CSS, no imagery. Hidden on
+              short viewports so it never collides with the headline. */}
+          <div
+            className="pointer-events-none absolute -right-6 bottom-2 hidden w-52 rounded-xl border border-white/15 bg-white/10 p-4 backdrop-blur-md [@media(min-width:1280px)_and_(min-height:800px)]:block"
+            aria-hidden="true"
+          >
+            <div className="flex items-center gap-2 text-xs text-white/70">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-success-500 text-white">
+                <Check className="h-3 w-3" />
+              </span>
+              Leave approved
+            </div>
+            <p className="mt-2 text-2xl font-semibold tracking-tight">12</p>
+            <p className="mt-0.5 text-xs text-white/60">
+              requests this month
+            </p>
+            <div className="mt-3 flex -space-x-2">
+              {["bg-violet-400", "bg-sky-400", "bg-teal-400"].map((c) => (
+                <span
+                  key={c}
+                  className={`h-6 w-6 rounded-full border-2 border-white/20 ${c}`}
+                />
+              ))}
+              <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-white/20 bg-white/20 text-[9px] font-semibold">
+                +8
+              </span>
+            </div>
+          </div>
         </div>
 
         <p className="relative text-xs text-white/60">
@@ -281,10 +338,10 @@ export function LoginPage() {
         </p>
       </aside>
 
-      {/* Form panel */}
+      {/* Form panel — elevated card over the atmospheric canvas */}
       <main className="flex flex-1 items-center justify-center px-4 py-10">
-        <div className="w-full max-w-[420px]">
-          <div className="lg:hidden">
+        <div className="w-full max-w-[420px] rounded-2xl border border-border/80 bg-card p-8 shadow-xl shadow-brand-900/5">
+          <div className="lg:hidden -mt-2">
             <BrandMark compact />
           </div>
 

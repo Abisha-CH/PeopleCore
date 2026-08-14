@@ -7,13 +7,15 @@
  * ============================================================
  * PeopleCore design tokens
  * ------------------------------------------------------------
- * Enterprise palette: blue primary + teal secondary + sky accent.
+ * Premium SaaS palette: PeopleCore blue primary, indigo/violet
+ * accents, teal secondary, sky inform; semantic status ramps
+ * (success/warning/destructive/info) for feedback states.
  * Tokens live as CSS variables in :root (themeable, dark-mode
  * ready) and are surfaced to Tailwind through `@theme inline`.
  *
  * Palette source: product design direction (PRODUCT.md §Visual).
- *   Primary   #2563EB / #1D4ED8
- *   Secondary #0F766E / #14B8A6
+ *   Primary   #2563EB / #1D4ED8   Indigo #4F46E5 / #6366F1
+ *   Violet    #8B5CF6 / #7C3AED  Secondary #0F766E / #14B8A6
  *   Accent    #38BDF8
  *   Success   #22C55E   Warning #F59E0B   Danger #EF4444
  *   Canvas    #F8FAFC   Surface #FFFFFF
@@ -68,6 +70,32 @@
   --sky-700: #0369a1;
   --sky-800: #075985;
   --sky-900: #0c4a6e;
+
+  /* ---- Brand: indigo (deep blue companion) ---- */
+  --indigo-50: #eef2ff;
+  --indigo-100: #e0e7ff;
+  --indigo-200: #c7d2fe;
+  --indigo-300: #a5b4fc;
+  --indigo-400: #818cf8;
+  --indigo-500: #6366f1;
+  --indigo-600: #4f46e5;
+  --indigo-700: #4338ca;
+  --indigo-800: #3730a3;
+  --indigo-900: #312e81;
+  --indigo-950: #1e1b4b;
+
+  /* ---- Brand: violet (lavender accent) ---- */
+  --violet-50: #f5f3ff;
+  --violet-100: #ede9fe;
+  --violet-200: #ddd6fe;
+  --violet-300: #c4b5fd;
+  --violet-400: #a78bfa;
+  --violet-500: #8b5cf6;
+  --violet-600: #7c3aed;
+  --violet-700: #6d28d9;
+  --violet-800: #5b21b6;
+  --violet-900: #4c1d95;
+  --violet-950: #2e1065;
 
   /* ---- Neutrals (slate) ---- */
   --slate-50: #f8fafc;
@@ -153,10 +181,24 @@
 
   /* ---- Chart palette (dashboard) ---- */
   --chart-1: var(--brand-600);
-  --chart-2: var(--teal-500);
-  --chart-3: var(--sky-400);
-  --chart-4: var(--warning);
-  --chart-5: var(--destructive);
+  --chart-2: var(--violet-500);
+  --chart-3: var(--teal-500);
+  --chart-4: var(--sky-400);
+  --chart-5: var(--warning);
+
+  /* ---- Gradients (brand expressions) ---- */
+  --gradient-primary:
+    linear-gradient(180deg, #3d6ef2 0%, var(--brand-600) 100%);
+  --gradient-primary-hover:
+    linear-gradient(180deg, #4f7ef7 0%, var(--brand-700) 100%);
+  --gradient-brand:
+    linear-gradient(135deg, var(--indigo-500) 0%, var(--brand-600) 55%, var(--teal-500) 100%);
+  --gradient-brand-strong:
+    linear-gradient(140deg, var(--indigo-950) 0%, var(--brand-900) 45%, var(--teal-900) 100%);
+  --gradient-surface:
+    linear-gradient(180deg, #ffffff 0%, var(--slate-50) 100%);
+  --gradient-cta:
+    linear-gradient(135deg, #4f6df5 0%, var(--brand-500) 50%, var(--sky-500) 100%);
 
   /* ---- Elevation (soft layered shadows) ---- */
   --shadow-xs: 0 1px 2px 0 rgb(15 23 42 / 0.04);
@@ -168,6 +210,12 @@
     0 4px 6px -4px rgb(15 23 42 / 0.05);
   --shadow-xl: 0 20px 25px -5px rgb(15 23 42 / 0.1),
     0 8px 10px -6px rgb(15 23 42 / 0.06);
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04),
+    0 6px 16px -6px rgb(15 23 42 / 0.08);
+  --shadow-card-hover: 0 2px 4px rgb(15 23 42 / 0.05),
+    0 14px 28px -8px rgb(79 70 229 / 0.16);
+  --shadow-glow-primary: 0 4px 14px -2px rgb(37 99 235 / 0.35);
+  --shadow-glow-destructive: 0 4px 14px -2px rgb(220 38 38 / 0.3);
   --shadow-focus: 0 0 0 3px rgb(37 99 235 / 0.35);
 
   /* ---- Motion: duration ---- */
@@ -235,6 +283,30 @@
   --color-sky-700: var(--sky-700);
   --color-sky-800: var(--sky-800);
   --color-sky-900: var(--sky-900);
+
+  --color-indigo-50: var(--indigo-50);
+  --color-indigo-100: var(--indigo-100);
+  --color-indigo-200: var(--indigo-200);
+  --color-indigo-300: var(--indigo-300);
+  --color-indigo-400: var(--indigo-400);
+  --color-indigo-500: var(--indigo-500);
+  --color-indigo-600: var(--indigo-600);
+  --color-indigo-700: var(--indigo-700);
+  --color-indigo-800: var(--indigo-800);
+  --color-indigo-900: var(--indigo-900);
+  --color-indigo-950: var(--indigo-950);
+
+  --color-violet-50: var(--violet-50);
+  --color-violet-100: var(--violet-100);
+  --color-violet-200: var(--violet-200);
+  --color-violet-300: var(--violet-300);
+  --color-violet-400: var(--violet-400);
+  --color-violet-500: var(--violet-500);
+  --color-violet-600: var(--violet-600);
+  --color-violet-700: var(--violet-700);
+  --color-violet-800: var(--violet-800);
+  --color-violet-900: var(--violet-900);
+  --color-violet-950: var(--violet-950);
 
   --color-slate-50: var(--slate-50);
   --color-slate-100: var(--slate-100);
@@ -331,6 +403,10 @@
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
+  --shadow-card: var(--shadow-card);
+  --shadow-card-hover: var(--shadow-card-hover);
+  --shadow-glow-primary: var(--shadow-glow-primary);
+  --shadow-glow-destructive: var(--shadow-glow-destructive);
   --shadow-focus: var(--shadow-focus);
 
   /* Motion */
@@ -347,6 +423,26 @@
     Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Segoe UI Mono",
     "Roboto Mono", Menlo, Consolas, monospace;
+}
+
+/*
+ * Gradient utilities — brand expressions.
+ * Usage: bg-primary-gradient, bg-brand-gradient, bg-surface-gradient.
+ */
+@utility bg-primary-gradient {
+  background-image: var(--gradient-primary);
+}
+
+@utility bg-brand-gradient {
+  background-image: var(--gradient-brand);
+}
+
+@utility bg-brand-gradient-strong {
+  background-image: var(--gradient-brand-strong);
+}
+
+@utility bg-surface-gradient {
+  background-image: var(--gradient-surface);
 }
 
 @layer base {
@@ -368,10 +464,29 @@
     font-size: 14px;
     line-height: 20px;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    /* Atmospheric depth: faint indigo/cyan glows at the edges, fixed so the
+       tint reads as one surface regardless of scroll position. */
+    background-image:
+      radial-gradient(
+        64rem 34rem at 100% -8%,
+        rgb(99 102 241 / 0.07),
+        transparent 62%
+      ),
+      radial-gradient(
+        52rem 28rem at -12% 28%,
+        rgb(14 165 233 / 0.055),
+        transparent 58%
+      ),
+      radial-gradient(
+        40rem 26rem at 50% 115%,
+        rgb(139 92 246 / 0.05),
+        transparent 55%
+      );
+    background-attachment: fixed;
   }
 
   ::selection {
-    background-color: rgb(37 99 235 / 0.18);
+    background-color: rgb(99 102 241 / 0.22);
   }
 
   /* Focus visibility — visible ring only for keyboard users */

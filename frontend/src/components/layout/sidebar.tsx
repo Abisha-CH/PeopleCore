@@ -21,7 +21,7 @@ function BrandMark({ compact }: { compact: boolean }) {
   return (
     <div className="flex items-center gap-2.5">
       <div
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand-600 to-teal-500 text-sm font-bold text-white shadow-sm"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-gradient text-sm font-bold text-white shadow-md shadow-brand-600/30"
         aria-hidden="true"
       >
         P
@@ -62,7 +62,7 @@ function NavLinkButton({
       mobile ? "h-11" : "h-9",
       rail ? "justify-center" : "px-3",
       isActive
-        ? "bg-muted font-medium text-foreground"
+        ? "bg-brand-50/80 font-medium text-brand-700"
         : "text-muted-foreground hover:bg-muted hover:text-foreground",
     );
 
@@ -78,14 +78,15 @@ function NavLinkButton({
             <span
               aria-hidden="true"
               className={cn(
-                "absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-brand-600",
+                "absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-brand-600 shadow-[0_0_6px_rgb(37_99_235/0.5)]",
                 rail && "h-6",
               )}
             />
           )}
           <Icon
             className={cn(
-              "shrink-0",
+              "shrink-0 transition-colors",
+              isActive && "text-brand-600",
               rail ? "h-5 w-5" : "h-[18px] w-[18px]",
             )}
             aria-hidden="true"

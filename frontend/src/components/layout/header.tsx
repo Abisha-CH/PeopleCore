@@ -46,7 +46,7 @@ function UserMenu() {
           className="h-10 gap-2 rounded-full pl-1 pr-2 hover:bg-muted"
           aria-label="Account menu"
         >
-          <Avatar className="h-8 w-8">
+          <Avatar className="h-8 w-8 ring-2 ring-brand-100 ring-offset-1">
             <AvatarFallback>{getInitials(displayName ?? email)}</AvatarFallback>
           </Avatar>
           <span className="hidden text-sm font-medium text-foreground sm:inline">

@@ -79,10 +79,10 @@ export function SetupPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-10">
+    <div className="flex min-h-screen items-center justify-center bg-transparent px-4 py-10">
       <div className="w-full max-w-[440px]">
         <div className="mb-8 flex flex-col items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-teal-600 text-lg font-bold text-white shadow-sm">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-gradient text-lg font-bold text-white shadow-md shadow-brand-600/30">
             P
           </div>
           <span className="text-lg font-semibold text-foreground">
@@ -90,7 +90,7 @@ export function SetupPage() {
           </span>
         </div>
 
-        <div className="rounded-xl border border-border bg-card p-7 shadow-sm">
+        <div className="rounded-xl border border-border/80 bg-card p-7 shadow-card">
           <div className="mb-6 text-center">
             <span className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
               <ShieldCheck className="h-5 w-5" />

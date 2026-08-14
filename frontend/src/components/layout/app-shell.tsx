@@ -36,7 +36,7 @@ export function AppShell() {
   const isMobile = useMediaQuery("(max-width: 1023px)");
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-transparent">
       <SkipLink />
       <div className="flex min-h-screen">
         <Sidebar

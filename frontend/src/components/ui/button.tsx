@@ -9,19 +9,20 @@ import { cn } from "@/lib/utils";
  * Minimum 44px touch target on small screens (px-4 h-10 on mobile).
  */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium shadow-xs transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium shadow-xs transition-all duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        // Primary: brand blue
+        // Primary: brand-blue gradient CTA with a soft glow; brightens on
+        // hover and presses down on active.
         default:
-          "bg-primary text-primary-foreground shadow-sm hover:bg-primary-hover",
+          "bg-primary-gradient text-primary-foreground shadow-glow-primary hover:bg-[image:var(--gradient-primary-hover)] hover:brightness-105 active:scale-[0.98]",
         // Secondary: teal brand action
         "secondary-brand":
-          "bg-secondary-brand text-secondary-brand-foreground shadow-sm hover:bg-secondary-brand-hover",
+          "bg-secondary-brand text-secondary-brand-foreground shadow-sm hover:bg-secondary-brand-hover active:scale-[0.98]",
         // Secondary: neutral bordered button
         secondary:
-          "border border-border bg-white text-secondary-foreground shadow-xs hover:bg-muted",
+          "border border-border bg-card text-secondary-foreground shadow-xs hover:bg-muted",
         // Outline: bordered transparent, for quiet/utility actions
         outline:
           "border border-border bg-transparent text-foreground shadow-xs hover:bg-muted hover:text-foreground",
@@ -29,7 +30,7 @@ const buttonVariants = cva(
         ghost: "bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground",
         // Destructive: solid red
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive-hover",
+          "bg-destructive text-destructive-foreground shadow-glow-destructive hover:bg-destructive-hover active:scale-[0.98]",
         // Destructive ghost: for row/dialog actions
         "destructive-ghost":
           "bg-transparent text-destructive hover:bg-destructive-50",
