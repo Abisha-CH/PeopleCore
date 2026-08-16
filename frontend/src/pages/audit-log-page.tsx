@@ -26,8 +26,9 @@ import { Pagination } from "@/components/ui/pagination";
 import { EmptyState } from "@/components/empty-state";
 import { useAuditLog } from "@/hooks/use-audit";
 import { useEmployees } from "@/hooks/use-employees";
-import { formatAuditAction, formatDateTime, getInitials } from "@/lib/format";
+import { formatAuditAction, formatDateTime, avatarToneClass, getInitials } from "@/lib/format";
 import type { AuditLogEntry, EmployeeRecord } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 /*
  * AuditLogPage — HR Admin view of the immutable audit trail.
@@ -201,7 +202,7 @@ export function AuditLogPage() {
       >
         {() => (
           <>
-            <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-xs">
+            <div className="overflow-x-auto rounded-xl border border-border/80 bg-card shadow-card">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -238,7 +239,9 @@ export function AuditLogPage() {
                           <TableCell>
                             <div className="flex items-center gap-3">
                               <Avatar className="h-8 w-8">
-                                <AvatarFallback className="text-xs">
+                                <AvatarFallback
+                                  className={cn("text-xs", avatarToneClass(employee?.fullName))}
+                                >
                                   {getInitials(employee?.fullName)}
                                 </AvatarFallback>
                               </Avatar>

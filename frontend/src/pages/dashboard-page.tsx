@@ -54,7 +54,19 @@ interface QuickAction {
   icon: typeof Users;
   label: string;
   description: string;
+  /** Icon chip tint — category colour (people=violet, leave=teal, pay=blue). */
+  tone?: "brand" | "violet" | "teal" | "sky" | "warning";
 }
+
+const QUICK_ACTION_CHIPS: Record<string, string> = {
+  brand: "bg-brand-gradient text-white shadow-brand-600/30 group-hover:shadow-brand-600/40",
+  violet:
+    "bg-gradient-to-br from-violet-500 to-indigo-600 text-white shadow-violet-600/30 group-hover:shadow-violet-600/40",
+  teal: "bg-gradient-to-br from-teal-500 to-teal-700 text-white shadow-teal-600/30 group-hover:shadow-teal-600/40",
+  sky: "bg-gradient-to-br from-sky-500 to-sky-700 text-white shadow-sky-600/30 group-hover:shadow-sky-600/40",
+  warning:
+    "bg-gradient-to-br from-warning-500 to-warning-700 text-white shadow-warning-600/30 group-hover:shadow-warning-600/40",
+};
 
 function QuickActions({
   title,
@@ -71,13 +83,18 @@ function QuickActions({
       </CardHeader>
       <CardContent>
         <div className="grid gap-3 sm:grid-cols-2">
-          {actions.map(({ to, icon: Icon, label, description }) => (
+          {actions.map(({ to, icon: Icon, label, description, tone = "brand" }) => (
             <Link
               key={to}
               to={to}
-              className="group flex items-start gap-3 rounded-lg border border-border/80 bg-card p-4 shadow-xs transition-all duration-fast hover:-translate-y-0.5 hover:border-brand-200 hover:bg-brand-50/50 hover:shadow-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+              className="group flex items-start gap-3 rounded-xl border border-border/80 bg-card p-4 shadow-xs transition-all duration-fast hover:-translate-y-0.5 hover:border-brand-200 hover:bg-brand-50/40 hover:shadow-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
             >
-              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-brand-50 text-brand-600 shadow-sm transition-all duration-fast group-hover:bg-brand-600 group-hover:text-white group-hover:shadow-md group-hover:shadow-brand-600/30">
+              <span
+                className={cn(
+                  "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg shadow-md transition-all duration-fast group-hover:scale-105",
+                  QUICK_ACTION_CHIPS[tone],
+                )}
+              >
                 <Icon className="h-4.5 w-4.5" aria-hidden="true" />
               </span>
               <span className="min-w-0">
@@ -109,6 +126,9 @@ interface AttentionItem {
   label: string;
   count: number;
   hint: string;
+  icon: typeof Users;
+  /** Category colour for the icon chip. */
+  tone: "warning" | "sky" | "brand";
 }
 
 function AttentionList({ items }: { items: AttentionItem[] }) {
@@ -120,18 +140,30 @@ function AttentionList({ items }: { items: AttentionItem[] }) {
       </CardHeader>
       <CardContent>
         <ul className="space-y-3">
-          {items.map(({ to, label, count, hint }) => (
+          {items.map(({ to, label, count, hint, icon: Icon, tone }) => (
             <li key={label}>
               <Link
                 to={to}
-                className="group flex items-center justify-between gap-4 rounded-lg border border-border/80 bg-card p-4 shadow-xs transition-all duration-fast hover:-translate-y-0.5 hover:border-brand-200 hover:bg-brand-50/50 hover:shadow-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+                className="group flex items-center justify-between gap-4 rounded-xl border border-border/80 bg-card p-4 shadow-xs transition-all duration-fast hover:-translate-y-0.5 hover:border-brand-200 hover:bg-brand-50/40 hover:shadow-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
               >
-                <span className="min-w-0">
-                  <span className="text-sm font-medium text-foreground">
-                    {label}
+                <span className="flex min-w-0 items-start gap-3">
+                  <span
+                    className={cn(
+                      "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg shadow-md",
+                      tone === "warning"
+                        ? "bg-gradient-to-br from-warning-500 to-warning-700 text-white shadow-warning-600/30"
+                        : "bg-gradient-to-br from-sky-500 to-sky-700 text-white shadow-sky-600/30",
+                    )}
+                  >
+                    <Icon className="h-4.5 w-4.5" aria-hidden="true" />
                   </span>
-                  <span className="mt-0.5 block text-xs text-muted-foreground">
-                    {hint}
+                  <span className="min-w-0">
+                    <span className="text-sm font-medium text-foreground">
+                      {label}
+                    </span>
+                    <span className="mt-0.5 block text-xs text-muted-foreground">
+                      {hint}
+                    </span>
                   </span>
                 </span>
                 <span className="flex shrink-0 items-center gap-2">
@@ -165,12 +197,16 @@ function AdminDashboardView({ data }: { data: AdminDashboard }) {
       label: "Leave awaiting final approval",
       count: data.managerApprovedLeaveCount,
       hint: "Requests your line-manager already approved — confirm or reject.",
+      icon: ClipboardCheck,
+      tone: "warning",
     },
     {
       to: "/payroll",
       label: "Draft payslips",
       count: data.draftPayslipCount,
       hint: "Generated but not yet published to employees.",
+      icon: ReceiptText,
+      tone: "sky",
     },
   ];
 
@@ -179,13 +215,13 @@ function AdminDashboardView({ data }: { data: AdminDashboard }) {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <StatCard
           icon={Users}
-          tone="brand"
+          tone="violet"
           value={data.activeHeadcount}
           label="Active employees"
         />
         <StatCard
           icon={ClipboardCheck}
-          tone="teal"
+          tone="warning"
           value={data.managerApprovedLeaveCount}
           label="Awaiting final approval"
         />
@@ -205,24 +241,28 @@ function AdminDashboardView({ data }: { data: AdminDashboard }) {
             {
               to: "/employees",
               icon: Users,
+              tone: "violet",
               label: "Employees",
               description: "View the team, edit records, provision access.",
             },
             {
               to: "/leave",
               icon: CalendarRange,
+              tone: "teal",
               label: "Leave management",
               description: "Review, approve or reject leave requests.",
             },
             {
               to: "/payroll",
               icon: Wallet,
+              tone: "brand",
               label: "Payroll",
               description: "Manage pay profiles and publish payslips.",
             },
             {
               to: "/leave-settings",
               icon: Settings2,
+              tone: "sky",
               label: "Leave settings",
               description: "Leave types, entitlements and public holidays.",
             },
@@ -288,18 +328,21 @@ function ManagerDashboardView({ data }: { data: ManagerDashboard }) {
             {
               to: "/my-leave",
               icon: CalendarDays,
+              tone: "teal",
               label: "My leave",
               description: "Request time off and check your balance.",
             },
             {
               to: "/my-payslips",
               icon: ReceiptText,
+              tone: "brand",
               label: "My payslips",
               description: "View and download your latest payslips.",
             },
             {
               to: "/my-profile",
               icon: UserRound,
+              tone: "violet",
               label: "My profile",
               description: "Review your details and contact information.",
             },
@@ -349,7 +392,14 @@ function EmployeeDashboardView({ data }: { data: EmployeeDashboard }) {
                     key={balance.leaveTypeId}
                     className="flex items-center justify-between gap-4 py-3.5 first:pt-0 last:pb-0"
                   >
-                    <span className="text-sm text-foreground">
+                    <span className="flex items-center gap-2.5 text-sm text-foreground">
+                      <span
+                        aria-hidden="true"
+                        className={cn(
+                          "h-2 w-2 shrink-0 rounded-full",
+                          leaveBalanceDot(balance.leaveTypeId),
+                        )}
+                      />
                       {balance.name}
                     </span>
                     <span className="flex items-baseline gap-1.5">
@@ -464,18 +514,21 @@ function EmployeeDashboardView({ data }: { data: EmployeeDashboard }) {
             {
               to: "/my-leave",
               icon: CalendarDays,
+              tone: "teal",
               label: "My leave",
               description: "Request time off and track your balance.",
             },
             {
               to: "/my-payslips",
               icon: ReceiptText,
+              tone: "brand",
               label: "My payslips",
               description: "Browse your payslip history.",
             },
             {
               to: "/my-profile",
               icon: UserRound,
+              tone: "violet",
               label: "My profile",
               description: "Keep your contact details up to date.",
             },
@@ -501,6 +554,23 @@ function PendingRequestRow({ request }: { request: LeaveRequest }) {
       <LeaveStatusBadge status={request.status} />
     </li>
   );
+}
+
+/** Stable tint dot for a leave-type name (teal/sky/violet/amber rotation). */
+function leaveBalanceDot(leaveTypeId: string): string {
+  let hash = 0;
+  for (let i = 0; i < leaveTypeId.length; i++) {
+    hash = (hash * 31 + leaveTypeId.charCodeAt(i)) | 0;
+  }
+  const dots = [
+    "bg-teal-500",
+    "bg-sky-500",
+    "bg-violet-500",
+    "bg-warning-500",
+    "bg-brand-500",
+    "bg-emerald-500",
+  ];
+  return dots[Math.abs(hash) % dots.length];
 }
 
 /* -------------------------------------------------------------------------- */

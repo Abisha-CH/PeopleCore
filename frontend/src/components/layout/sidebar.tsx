@@ -9,7 +9,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { getInitials } from "@/lib/format";
+import { getInitials, avatarToneClass } from "@/lib/format";
 
 const COLLAPSE_KEY = "peoplecore.sidebar.collapsed";
 
@@ -21,10 +21,11 @@ function BrandMark({ compact }: { compact: boolean }) {
   return (
     <div className="flex items-center gap-2.5">
       <div
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-gradient text-sm font-bold text-white shadow-md shadow-brand-600/30"
+        className="relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-brand-gradient text-sm font-bold text-white shadow-md shadow-brand-600/30"
         aria-hidden="true"
       >
-        P
+        <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgb(255_255_255/0.35),transparent_55%)]" />
+        <span className="relative">P</span>
       </div>
       {!compact && (
         <span className="text-[15px] font-semibold tracking-tight text-foreground">
@@ -62,7 +63,7 @@ function NavLinkButton({
       mobile ? "h-11" : "h-9",
       rail ? "justify-center" : "px-3",
       isActive
-        ? "bg-brand-50/80 font-medium text-brand-700"
+        ? "bg-brand-50/80 font-medium text-brand-700 shadow-[inset_0_1px_0_rgb(255_255_255/0.8)]"
         : "text-muted-foreground hover:bg-muted hover:text-foreground",
     );
 
@@ -98,9 +99,15 @@ function NavLinkButton({
   );
 
   if (rail) {
+    // NOTE: the NavLink must be wrapped in a plain <span> before the Radix
+    // TooltipTrigger asChild clone. Radix merges props onto the child and
+    // stringifies a function className, which would destroy the NavLink's
+    // active/hover styling. The span shields the NavLink from that merge.
     return (
       <Tooltip delayDuration={0}>
-        <TooltipTrigger asChild>{link}</TooltipTrigger>
+        <TooltipTrigger asChild>
+          <span className="block">{link}</span>
+        </TooltipTrigger>
         <TooltipContent side="right" sideOffset={12}>
           {label}
         </TooltipContent>
@@ -213,7 +220,9 @@ function SidebarContent({
           )}
         >
           <Avatar className="h-9 w-9">
-            <AvatarFallback>{getInitials(displayName ?? email)}</AvatarFallback>
+            <AvatarFallback className={avatarToneClass(displayName ?? email)}>
+              {getInitials(displayName ?? email)}
+            </AvatarFallback>
           </Avatar>
           {!rail && (
             <div className="min-w-0 flex-1">

@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getInitials } from "@/lib/format";
+import { getInitials, avatarToneClass } from "@/lib/format";
 import { CommandPalette } from "./command-palette";
 
 /*
@@ -47,7 +47,9 @@ function UserMenu() {
           aria-label="Account menu"
         >
           <Avatar className="h-8 w-8 ring-2 ring-brand-100 ring-offset-1">
-            <AvatarFallback>{getInitials(displayName ?? email)}</AvatarFallback>
+            <AvatarFallback className={avatarToneClass(displayName ?? email)}>
+              {getInitials(displayName ?? email)}
+            </AvatarFallback>
           </Avatar>
           <span className="hidden text-sm font-medium text-foreground sm:inline">
             {displayName ?? email}
@@ -60,12 +62,21 @@ function UserMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-60">
         <DropdownMenuLabel>
-          <p className="truncate text-sm font-medium text-foreground">
-            {displayName ?? email}
-          </p>
-          <p className="truncate text-xs font-normal text-muted-foreground">
-            {email}
-          </p>
+          <div className="flex items-center gap-3">
+            <Avatar className="h-9 w-9">
+              <AvatarFallback className={avatarToneClass(displayName ?? email)}>
+                {getInitials(displayName ?? email)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium text-foreground">
+                {displayName ?? email}
+              </p>
+              <p className="truncate text-xs font-normal text-muted-foreground">
+                {email}
+              </p>
+            </div>
+          </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
@@ -125,7 +136,7 @@ export function Header({ onMenuToggle, showMenuButton }: HeaderProps) {
         </nav>
       </div>
 
-      <div className="flex items-center gap-2 pr-4 sm:pr-6">
+      <div className="flex items-center gap-2.5 pr-4 sm:pr-6">
         {role && <CommandPalette />}
         <UserMenu />
       </div>

@@ -60,12 +60,14 @@ export function CommandPalette() {
           <Button
             variant="outline"
             onClick={() => setOpen(true)}
-            className="h-9 w-9 justify-between gap-2 rounded-lg border-border/80 bg-card/60 px-0 text-sm font-normal text-muted-foreground shadow-none hover:bg-muted hover:text-muted-foreground sm:w-48 sm:px-3"
+            className="group h-9 w-9 justify-between gap-2 rounded-lg border-border/70 bg-card/70 px-0 text-sm font-normal text-muted-foreground shadow-xs hover:border-brand-300/60 hover:bg-card hover:text-foreground hover:shadow-card sm:w-52 sm:px-3"
             aria-label="Search pages"
           >
             <span className="hidden items-center gap-2 sm:flex">
-              <Search className="h-4 w-4" aria-hidden="true" />
-              <span>Search…</span>
+              <span className="flex h-5 w-5 items-center justify-center rounded-md bg-gradient-to-br from-brand-50 to-indigo-100 text-brand-600 transition-colors group-hover:from-brand-100 group-hover:to-indigo-200">
+                <Search className="h-3.5 w-3.5" aria-hidden="true" />
+              </span>
+              <span>Search pages…</span>
             </span>
             <Search className="h-4 w-4 sm:hidden" aria-hidden="true" />
             <Kbd className="hidden sm:inline-flex">⌘K</Kbd>

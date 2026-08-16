@@ -80,6 +80,7 @@ import {
 } from "@/hooks/use-payroll";
 import {
   formatCurrency,
+  avatarToneClass,
   getInitials,
   monthName,
   monthYearLabel,
@@ -89,6 +90,7 @@ import type {
   PayrollProfile,
   Payslip,
 } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 /*
  * PayrollPage — HR Admin console for payroll profiles and payslips.
@@ -220,7 +222,7 @@ function PayslipsTab() {
         }
       >
         {(d) => (
-          <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-xs">
+          <div className="overflow-x-auto rounded-xl border border-border/80 bg-card shadow-card">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -245,7 +247,9 @@ function PayslipsTab() {
                     <TableRow key={payslip.payslipId}>
                       <TableCell className="flex items-center gap-3">
                         <Avatar className="h-8 w-8">
-                          <AvatarFallback className="text-xs">
+                          <AvatarFallback
+                            className={cn("text-xs", avatarToneClass(employee?.fullName))}
+                          >
                             {getInitials(employee?.fullName)}
                           </AvatarFallback>
                         </Avatar>
@@ -264,8 +268,10 @@ function PayslipsTab() {
                       <TableCell className="hidden md:table-cell tabular-nums">
                         {formatCurrency(payslip.baseSalary)}
                       </TableCell>
-                      <TableCell className="hidden lg:table-cell font-medium tabular-nums">
-                        {formatCurrency(payslip.netSalary)}
+                      <TableCell className="hidden lg:table-cell">
+                        <span className="inline-flex items-center gap-1.5 rounded-lg border border-success-200 bg-success-50 px-2 py-1 text-sm font-semibold text-success-700 tabular-nums">
+                          {formatCurrency(payslip.netSalary)}
+                        </span>
                       </TableCell>
                       <TableCell>
                         <PayslipStatusBadge status={payslip.status} />
@@ -755,7 +761,7 @@ function ProfilesTab() {
       >
         {() => (
           <>
-            <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-xs">
+            <div className="overflow-x-auto rounded-xl border border-border/80 bg-card shadow-card">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -816,7 +822,9 @@ function ProfileRow({
     <TableRow>
       <TableCell className="flex items-center gap-3">
         <Avatar className="h-8 w-8">
-          <AvatarFallback className="text-xs">
+          <AvatarFallback
+            className={cn("text-xs", avatarToneClass(employee.fullName))}
+          >
             {getInitials(employee.fullName)}
           </AvatarFallback>
         </Avatar>
@@ -842,7 +850,13 @@ function ProfileRow({
         {data?.bankAccountNumber ?? "—"}
       </TableCell>
       <TableCell className="tabular-nums">
-        {data ? formatCurrency(data.baseSalary) : "—"}
+        {data ? (
+          <span className="font-semibold text-foreground">
+            {formatCurrency(data.baseSalary)}
+          </span>
+        ) : (
+          "—"
+        )}
       </TableCell>
       <TableCell>
         <Button

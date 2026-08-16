@@ -52,6 +52,25 @@ const ROLE_ICONS: Record<Role, typeof ShieldCheck> = {
   employee: UserRound,
 };
 
+/* Per-role accent: admin=brand indigo, manager=teal, employee=sky. */
+const ROLE_ICON_TONES: Record<
+  Role,
+  { idle: string; active: string }
+> = {
+  admin: {
+    idle: "bg-brand-50 text-brand-700 group-hover:bg-brand-100 group-hover:text-brand-700",
+    active: "bg-brand-gradient text-white shadow-md shadow-brand-600/30",
+  },
+  manager: {
+    idle: "bg-teal-50 text-teal-700 group-hover:bg-teal-100 group-hover:text-teal-700",
+    active: "bg-gradient-to-br from-teal-500 to-teal-700 text-white shadow-md shadow-teal-600/30",
+  },
+  employee: {
+    idle: "bg-sky-50 text-sky-700 group-hover:bg-sky-100 group-hover:text-sky-700",
+    active: "bg-gradient-to-br from-sky-500 to-sky-700 text-white shadow-md shadow-sky-600/30",
+  },
+};
+
 function BrandMark({ compact = false }: { compact?: boolean }) {
   return (
     <div
@@ -139,8 +158,8 @@ function RoleSelector({
                   className={cn(
                     "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm transition-all duration-fast",
                     active
-                      ? "bg-brand-gradient text-white shadow-md shadow-brand-600/30"
-                      : "bg-brand-50 text-brand-700 group-hover:bg-brand-100 group-hover:text-brand-700",
+                      ? ROLE_ICON_TONES[role].active
+                      : ROLE_ICON_TONES[role].idle,
                   )}
                 >
                   <Icon className="h-5 w-5" />

@@ -47,7 +47,8 @@ import {
   EmployeeStatusBadge,
 } from "@/components/status-badge";
 import { useDeleteEmployee, useEmployees } from "@/hooks/use-employees";
-import { formatDate, getInitials } from "@/lib/format";
+import { avatarToneClass, formatDate, getInitials } from "@/lib/format";
+import { cn } from "@/lib/utils";
 import type { EmployeeRecord } from "@/lib/types";
 import { EmptyState } from "@/components/empty-state";
 
@@ -218,7 +219,7 @@ export function EmployeesPage() {
       >
         {() => (
           <>
-            <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-xs">
+            <div className="overflow-x-auto rounded-xl border border-border/80 bg-card shadow-card">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -257,13 +258,18 @@ export function EmployeesPage() {
                     pageData.map((emp) => (
                       <TableRow key={emp.employeeId}>
                         <TableCell className="flex items-center gap-3">
-                          <Avatar className="h-8 w-8">
-                            <AvatarFallback className="text-xs">
+                          <Avatar className="h-9 w-9">
+                            <AvatarFallback
+                              className={cn(
+                                "text-xs",
+                                avatarToneClass(emp.fullName),
+                              )}
+                            >
                               {getInitials(emp.fullName)}
                             </AvatarFallback>
                           </Avatar>
                           <div className="min-w-0">
-                            <p className="truncate text-sm font-medium text-foreground">
+                            <p className="truncate text-sm font-semibold text-foreground">
                               {emp.fullName}
                             </p>
                             <p className="truncate text-xs text-muted-foreground">

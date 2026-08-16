@@ -22,10 +22,10 @@ const buttonVariants = cva(
           "bg-secondary-brand text-secondary-brand-foreground shadow-sm hover:bg-secondary-brand-hover active:scale-[0.98]",
         // Secondary: neutral bordered button
         secondary:
-          "border border-border bg-card text-secondary-foreground shadow-xs hover:bg-muted",
+          "border border-border bg-card text-secondary-foreground shadow-xs hover:border-brand-200/70 hover:bg-muted active:scale-[0.98]",
         // Outline: bordered transparent, for quiet/utility actions
         outline:
-          "border border-border bg-transparent text-foreground shadow-xs hover:bg-muted hover:text-foreground",
+          "border border-border bg-transparent text-foreground shadow-xs hover:border-brand-200/70 hover:bg-muted hover:text-foreground active:scale-[0.98]",
         // Ghost: subtle hover, for toolbar actions
         ghost: "bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground",
         // Destructive: solid red

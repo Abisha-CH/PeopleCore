@@ -25,6 +25,30 @@ export function getInitials(name: string | null | undefined): string {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
+/*
+ * Deterministic avatar tint — same name always maps to the same soft
+ * gradient chip, so people are recognizable across pages without photos.
+ * Pairs with the AvatarFallback override: `avatarToneClass(name)`.
+ */
+const AVATAR_TONES = [
+  "bg-gradient-to-br from-brand-100 to-indigo-100 text-brand-700",
+  "bg-gradient-to-br from-violet-100 to-indigo-100 text-violet-700",
+  "bg-gradient-to-br from-teal-100 to-sky-100 text-teal-700",
+  "bg-gradient-to-br from-sky-100 to-indigo-100 text-sky-700",
+  "bg-gradient-to-br from-amber-100 to-warning-100 text-warning-700",
+  "bg-gradient-to-br from-rose-100 to-destructive-100 text-rose-700",
+  "bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-700",
+] as const;
+
+export function avatarToneClass(name: string | null | undefined): string {
+  const source = name ?? "";
+  let hash = 0;
+  for (let i = 0; i < source.length; i++) {
+    hash = (hash * 31 + source.charCodeAt(i)) | 0;
+  }
+  return AVATAR_TONES[Math.abs(hash) % AVATAR_TONES.length];
+}
+
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",

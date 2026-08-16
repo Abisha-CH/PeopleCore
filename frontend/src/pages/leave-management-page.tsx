@@ -41,7 +41,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
-import { LeaveStatusBadge } from "@/components/status-badge";
+import { LeaveStatusBadge, LeaveTypeBadge } from "@/components/status-badge";
 import { LeaveDetailDialog } from "@/components/leave/leave-detail-dialog";
 import { LeaveDecisionDialog } from "@/components/leave/leave-decision-dialog";
 import { LeaveOverrideDialog } from "@/components/leave/leave-override-dialog";
@@ -52,8 +52,9 @@ import {
   useLeaveTypes,
 } from "@/hooks/use-leave";
 import { useEmployees } from "@/hooks/use-employees";
-import { formatDateRange, formatDateTime, getInitials } from "@/lib/format";
+import { formatDateRange, formatDateTime, avatarToneClass, getInitials } from "@/lib/format";
 import type { LeaveRequest, EmployeeRecord, LeaveType } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 /*
  * LeaveManagementPage — HR Admin view of all leave requests.
@@ -220,7 +221,7 @@ export function LeaveManagementPage() {
       >
         {() => (
           <>
-            <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-xs">
+            <div className="overflow-x-auto rounded-xl border border-border/80 bg-card shadow-card">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -259,7 +260,9 @@ export function LeaveManagementPage() {
                         <TableRow key={request.leaveRequestId}>
                           <TableCell className="flex items-center gap-3">
                             <Avatar className="h-8 w-8">
-                              <AvatarFallback className="text-xs">
+                              <AvatarFallback
+                                className={cn("text-xs", avatarToneClass(employee?.fullName))}
+                              >
                                 {getInitials(employee?.fullName)}
                               </AvatarFallback>
                             </Avatar>
@@ -273,7 +276,7 @@ export function LeaveManagementPage() {
                             </div>
                           </TableCell>
                           <TableCell className="hidden md:table-cell">
-                            {leaveType?.name ?? "—"}
+                            <LeaveTypeBadge name={leaveType?.name} />
                           </TableCell>
                           <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
                             {formatDateRange(

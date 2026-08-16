@@ -131,7 +131,7 @@ export function MyPayslipsPage() {
       >
         {() => (
           <>
-            <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-xs">
+            <div className="overflow-x-auto rounded-xl border border-border/80 bg-card shadow-card">
               <Table>
                 <TableHeader>
                   <TableRow>

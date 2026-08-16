@@ -14,9 +14,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { LeaveStatusBadge } from "@/components/status-badge";
-import { formatDateRange, formatDateTime, getInitials } from "@/lib/format";
-import type { LeaveRequest } from "@/lib/types";
+import { LeaveStatusBadge, LeaveTypeBadge } from "@/components/status-badge";
+import { avatarToneClass, formatDateRange, formatDateTime, getInitials } from "@/lib/format";
+import type { LeaveRequest, LeaveRequestStatus } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 /*
  * LeaveDetailDialog — read-only view of a leave request with its review trail.
@@ -65,7 +66,9 @@ export function LeaveDetailDialog({
         <DialogHeader>
           <div className="flex items-center gap-3">
             <Avatar className="h-11 w-11">
-              <AvatarFallback>{getInitials(employeeName)}</AvatarFallback>
+              <AvatarFallback className={avatarToneClass(employeeName)}>
+                {getInitials(employeeName)}
+              </AvatarFallback>
             </Avatar>
             <div>
               <DialogTitle className="text-lg">
@@ -83,7 +86,7 @@ export function LeaveDetailDialog({
         </DialogHeader>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="info">{leaveTypeName ?? "Leave type"}</Badge>
+          <LeaveTypeBadge name={leaveTypeName} />
           <LeaveStatusBadge status={request.status} />
           <Badge variant="neutral">
             {request.numberOfDays} day{request.numberOfDays === 1 ? "" : "s"}
@@ -163,33 +166,52 @@ function ReviewTrail({ request }: { request: LeaveRequest }) {
     request.status === "rejected" ||
     request.status === "cancelled";
 
+  // The final step's dot follows the current status so the trail reads as a
+  // journey: completed steps are emerald, the open one is amber/sky/rose.
+  const statusDot: Record<LeaveRequestStatus, string> = {
+    pending: "bg-warning-100 text-warning-600",
+    manager_approved: "bg-sky-100 text-sky-600",
+    approved: "bg-emerald-100 text-emerald-600",
+    rejected: "bg-rose-100 text-rose-600",
+    cancelled: "bg-muted text-muted-foreground",
+  };
+
   return (
     <section className="space-y-3">
       <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
         Review trail
       </h3>
       <ol className="space-y-3">
-        {steps.map((step) => (
-          <li key={step.label} className="flex gap-3">
-            <span
-              className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600"
-              aria-hidden="true"
-            >
-              <CheckCircle2 className="h-3.5 w-3.5" />
-            </span>
-            <div className="min-w-0">
-              <p className="flex flex-wrap items-center gap-x-2 text-sm font-medium text-foreground">
-                {step.label}
-                <span className="text-xs font-normal text-muted-foreground">
-                  {step.when}
-                </span>
-              </p>
-              {step.note && (
-                <p className="mt-0.5 text-xs text-muted-foreground">{step.note}</p>
-              )}
-            </div>
-          </li>
-        ))}
+        {steps.map((step, index) => {
+          const isFinal = index === steps.length - 1;
+          const done = isFinal
+            ? statusDot[request.status]
+            : "bg-emerald-100 text-emerald-600";
+          return (
+            <li key={step.label} className="flex gap-3">
+              <span
+                className={cn(
+                  "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
+                  done,
+                )}
+                aria-hidden="true"
+              >
+                <CheckCircle2 className="h-3.5 w-3.5" />
+              </span>
+              <div className="min-w-0">
+                <p className="flex flex-wrap items-center gap-x-2 text-sm font-medium text-foreground">
+                  {step.label}
+                  <span className="text-xs font-normal text-muted-foreground">
+                    {step.when}
+                  </span>
+                </p>
+                {step.note && (
+                  <p className="mt-0.5 text-xs text-muted-foreground">{step.note}</p>
+                )}
+              </div>
+            </li>
+          );
+        })}
         {!isResolved && steps.length <= 1 && (
           <li className="flex items-center gap-2 text-xs text-muted-foreground">
             <CalendarDays className="h-4 w-4" aria-hidden="true" />

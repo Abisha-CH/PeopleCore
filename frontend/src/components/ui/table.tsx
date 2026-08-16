@@ -4,11 +4,12 @@ import { cn } from "@/lib/utils";
 
 /*
  * Data table — semantic borders/surfaces, generous padding, hover affordance.
- * Sortable headers are wired in the shared DataTable wrapper.
+ * Pages wrap <Table> in their own rounded surface container; this wrapper
+ * only clips the table to the container's radius.
  */
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
-    <div className="relative w-full overflow-auto rounded-lg border border-border bg-card shadow-xs">
+    <div className="relative w-full overflow-auto rounded-xl">
       <table ref={ref} className={cn("w-full caption-bottom text-sm", className)} {...props} />
     </div>
   ),

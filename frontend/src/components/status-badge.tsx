@@ -82,3 +82,36 @@ export function PayslipStatusBadge({ status }: { status: PayslipStatus }) {
     </Badge>
   );
 }
+
+/* -------------------------------------------------------------------------- */
+/* Leave type chip                                                             */
+/* -------------------------------------------------------------------------- */
+
+const LEAVE_TYPE_TONES: { chip: string; dot: string }[] = [
+  { chip: "border-teal-200 bg-teal-50 text-teal-700", dot: "bg-teal-500" },
+  { chip: "border-sky-200 bg-sky-50 text-sky-700", dot: "bg-sky-500" },
+  { chip: "border-violet-200 bg-violet-50 text-violet-700", dot: "bg-violet-500" },
+  { chip: "border-warning-200 bg-warning-50 text-warning-700", dot: "bg-warning-500" },
+  { chip: "border-brand-200 bg-brand-50 text-brand-700", dot: "bg-brand-500" },
+  { chip: "border-emerald-200 bg-emerald-50 text-emerald-700", dot: "bg-emerald-500" },
+];
+
+function toneForName(name: string): { chip: string; dot: string } {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = (hash * 31 + name.charCodeAt(i)) | 0;
+  }
+  return LEAVE_TYPE_TONES[Math.abs(hash) % LEAVE_TYPE_TONES.length];
+}
+
+/** Tinted chip for a leave type — stable colour per type name. */
+export function LeaveTypeBadge({ name }: { name?: string | null }) {
+  if (!name) return <span className="text-sm text-muted-foreground">—</span>;
+  const tone = toneForName(name);
+  return (
+    <Badge variant="outline" className={cn("border", tone.chip)}>
+      <StatusDot className={tone.dot} />
+      {name}
+    </Badge>
+  );
+}

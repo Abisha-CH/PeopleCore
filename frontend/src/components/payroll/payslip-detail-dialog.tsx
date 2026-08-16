@@ -13,6 +13,7 @@ import { PayslipStatusBadge } from "@/components/status-badge";
 import {
   formatCurrency,
   formatDateTime,
+  avatarToneClass,
   getInitials,
   monthYearLabel,
 } from "@/lib/format";
@@ -64,7 +65,9 @@ export function PayslipDetailDialog({
         <DialogHeader>
           <div className="flex items-center gap-3">
             <Avatar className="h-11 w-11">
-              <AvatarFallback>{getInitials(employeeName)}</AvatarFallback>
+              <AvatarFallback className={avatarToneClass(employeeName)}>
+                {getInitials(employeeName)}
+              </AvatarFallback>
             </Avatar>
             <div>
               <DialogTitle className="text-lg">
@@ -78,7 +81,6 @@ export function PayslipDetailDialog({
         </DialogHeader>
 
         <div className="flex flex-wrap items-center gap-2">
-          <PayslipStatusBadge status={payslip.status} />
           {payslip.generatedAt && (
             <Badge variant="neutral">
               Generated {formatDateTime(payslip.generatedAt)}
@@ -87,12 +89,17 @@ export function PayslipDetailDialog({
         </div>
 
         {/* Earnings summary */}
-        <section className="rounded-lg border border-border bg-muted/40">
-          <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            <ReceiptText className="h-3.5 w-3.5" aria-hidden="true" />
-            Summary
-          </h3>
-          <dl className="divide-y divide-border px-4">
+        <section className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
+          <div className="relative bg-gradient-to-br from-emerald-50 via-slate-50 to-teal-50 px-4 py-3">
+            <div className="flex items-center justify-between">
+              <h3 className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <ReceiptText className="h-3.5 w-3.5 text-emerald-600" aria-hidden="true" />
+                Summary
+              </h3>
+              <PayslipStatusBadge status={payslip.status} />
+            </div>
+          </div>
+          <dl className="divide-y divide-border px-4 pb-2">
             <Fact label="Base salary" value={formatCurrency(payslip.baseSalary)} />
             <Fact
               label="Total deductions"
@@ -100,7 +107,7 @@ export function PayslipDetailDialog({
             />
             <div className="flex items-center justify-between gap-4 py-3">
               <dt className="text-sm font-semibold text-foreground">Net pay</dt>
-              <dd className="text-lg font-semibold text-brand-600 tabular-nums">
+              <dd className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-lg font-semibold text-emerald-700 tabular-nums">
                 {formatCurrency(payslip.netSalary)}
               </dd>
             </div>

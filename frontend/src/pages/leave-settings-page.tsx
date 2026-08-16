@@ -77,6 +77,7 @@ import {
 } from "@/hooks/use-leave";
 import { formatDate } from "@/lib/format";
 import type { LeaveType, PublicHoliday } from "@/lib/types";
+import { LeaveTypeBadge } from "@/components/status-badge";
 
 /*
  * LeaveSettingsPage — three-tab settings console for HR Admin.
@@ -185,7 +186,7 @@ function LeaveTypesTab() {
         }
       >
         {(d) => (
-          <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-xs">
+          <div className="overflow-x-auto rounded-xl border border-border/80 bg-card shadow-card">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -202,7 +203,9 @@ function LeaveTypesTab() {
               <TableBody>
                 {d.leaveTypes.map((type) => (
                   <TableRow key={type.leaveTypeId}>
-                    <TableCell className="font-medium">{type.name}</TableCell>
+                    <TableCell>
+                      <LeaveTypeBadge name={type.name} />
+                    </TableCell>
                     <TableCell>
                       {type.isCapped ? (
                         <Badge variant="info">Capped</Badge>
@@ -492,7 +495,7 @@ function EntitlementsTab() {
         Individual employee overrides take precedence.
       </p>
 
-      <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-xs">
+      <div className="overflow-x-auto rounded-xl border border-border/80 bg-card shadow-card">
         <Table>
           <TableHeader>
             <TableRow>
@@ -737,7 +740,7 @@ function PublicHolidaysTab() {
         }
       >
         {(d) => (
-          <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-xs">
+          <div className="overflow-x-auto rounded-xl border border-border/80 bg-card shadow-card">
             <Table>
               <TableHeader>
                 <TableRow>

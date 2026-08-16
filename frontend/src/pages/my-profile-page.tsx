@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Info,
   Loader2,
   Mail,
   MapPin,
@@ -45,9 +44,10 @@ import { Input } from "@/components/ui/input";
 import { EmployeeStatusBadge } from "@/components/status-badge";
 import { useEmployee, useUpdateOwnPhone } from "@/hooks/use-employees";
 import { ApiError } from "@/lib/api";
-import { formatDate, getInitials, lineManagerLabel } from "@/lib/format";
+import { formatDate, avatarToneClass, getInitials, lineManagerLabel } from "@/lib/format";
 import { useAuth } from "@/providers/auth-provider";
 import type { EmployeeRecord } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 /*
  * MyProfilePage — a user's view of their own record.
@@ -288,7 +288,9 @@ function AdminAccountView({
           <div className="-mt-12 flex flex-wrap items-end justify-between gap-4">
             <div className="flex items-end gap-4">
               <Avatar className="h-20 w-20 ring-4 ring-background">
-                <AvatarFallback className="text-lg">
+                <AvatarFallback
+                  className={cn("text-lg", avatarToneClass(name))}
+                >
                   {getInitials(name)}
                 </AvatarFallback>
               </Avatar>
@@ -349,19 +351,19 @@ function AdminAccountView({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex items-start gap-3 rounded-lg border border-info/20 bg-info/5 p-4">
-              <Info
-                className="mt-0.5 h-4 w-4 shrink-0 text-sky-600"
+            <div className="flex items-start gap-3 rounded-xl border border-success/20 bg-success/5 p-4">
+              <ShieldCheck
+                className="mt-0.5 h-4 w-4 shrink-0 text-success-600"
                 aria-hidden="true"
               />
               <div>
                 <p className="text-sm font-medium text-foreground">
-                  No employee record is linked to this account
+                  Your admin account is active
                 </p>
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  Employee-only details such as department, job title and pay
-                  aren&apos;t available until this account is linked to an
-                  employee record in People. You can still access the admin
+                  This account isn&apos;t linked to an employee record, so
+                  employee-only details such as department, job title and pay
+                  aren&apos;t available. You can still access the admin
                   features below.
                 </p>
               </div>
@@ -393,7 +395,9 @@ function IdentityCard({ employee }: { employee: EmployeeRecord }) {
         <div className="-mt-12 flex flex-wrap items-end justify-between gap-4">
           <div className="flex items-end gap-4">
             <Avatar className="h-20 w-20 ring-4 ring-background">
-              <AvatarFallback className="text-lg">
+              <AvatarFallback
+                className={cn("text-lg", avatarToneClass(employee.fullName))}
+              >
                 {getInitials(employee.fullName)}
               </AvatarFallback>
             </Avatar>

@@ -34,7 +34,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
-import { LeaveStatusBadge } from "@/components/status-badge";
+import { LeaveStatusBadge, LeaveTypeBadge } from "@/components/status-badge";
 import { LeaveDetailDialog } from "@/components/leave/leave-detail-dialog";
 import { LeaveRequestFormDialog } from "@/components/leave/leave-request-form-dialog";
 import { EmptyState } from "@/components/empty-state";
@@ -158,7 +158,7 @@ export function MyLeavePage() {
       >
         {() => (
           <>
-            <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-xs">
+            <div className="overflow-x-auto rounded-xl border border-border/80 bg-card shadow-card">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -191,7 +191,7 @@ export function MyLeavePage() {
                       return (
                         <TableRow key={request.leaveRequestId}>
                           <TableCell className="hidden md:table-cell">
-                            {leaveType?.name ?? "—"}
+                            <LeaveTypeBadge name={leaveType?.name} />
                           </TableCell>
                           <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
                             {formatDateRange(

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useUpdateLeaveRequestStatus } from "@/hooks/use-leave";
 import { formatDateRange } from "@/lib/format";
 import type { LeaveRequest } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 /*
  * LeaveDecisionDialog — approve / reject a leave request.
@@ -95,8 +96,29 @@ export function LeaveDecisionDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="rounded-lg border border-border bg-muted/40 p-4">
-            <p className="text-sm font-medium text-foreground">
+          <div
+            className={cn(
+              "relative overflow-hidden rounded-xl border p-4",
+              isApprove
+                ? "border-emerald-200 bg-gradient-to-br from-emerald-50 via-slate-50 to-teal-50"
+                : "border-rose-200 bg-gradient-to-br from-rose-50 via-slate-50 to-orange-50",
+            )}
+          >
+            <span
+              className={cn(
+                "inline-flex h-9 w-9 items-center justify-center rounded-lg shadow-md",
+                isApprove
+                  ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-emerald-600/30"
+                  : "bg-gradient-to-br from-rose-500 to-rose-700 text-white shadow-rose-600/30",
+              )}
+            >
+              {isApprove ? (
+                <CheckCircle2 className="h-4.5 w-4.5" aria-hidden="true" />
+              ) : (
+                <XCircle className="h-4.5 w-4.5" aria-hidden="true" />
+              )}
+            </span>
+            <p className="mt-3 text-sm font-medium text-foreground">
               {formatDateRange(request.startDate, request.endDate, request.isHalfDay)}
             </p>
             <p className="mt-0.5 text-xs text-muted-foreground">
