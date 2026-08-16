@@ -117,7 +117,7 @@ export function PayslipDetailDialog({
         {/* Deductions breakdown */}
         <section className="rounded-lg border border-border">
           <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            <CircleDollarSign className="h-3.5 w-3.5" aria-hidden="true" />
+            <CircleDollarSign className="h-3.5 w-3.5 text-violet-600" aria-hidden="true" />
             Deductions
           </h3>
           {payslip.deductions.length === 0 ? (
@@ -133,7 +133,7 @@ export function PayslipDetailDialog({
                   className="flex items-center justify-between gap-4 py-2.5"
                 >
                   <dt className="text-sm text-foreground">{deduction.label}</dt>
-                  <dd className="text-sm text-muted-foreground tabular-nums">
+                  <dd className="text-sm font-medium text-foreground tabular-nums">
                     {formatCurrency(deduction.amount)}
                   </dd>
                 </div>

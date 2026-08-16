@@ -3,7 +3,8 @@ import { Eye, History, Search } from "lucide-react";
 
 import { PageHeader } from "@/components/page-header";
 import { QueryState } from "@/components/feedback/query-state";
-import { AuditEntryDialog, RoleBadge } from "@/components/audit/audit-entry-dialog";
+import { AuditEntryDialog } from "@/components/audit/audit-entry-dialog";
+import { RoleBadge } from "@/components/layout/role-badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -267,7 +268,7 @@ export function AuditLogPage() {
                           </TableCell>
                           <TableCell>
                             {entry.diff && Object.keys(entry.diff).length > 0 ? (
-                              <span className="inline-flex items-center gap-1.5 text-sm text-teal-700">
+                              <span className="inline-flex items-center gap-1 rounded-lg border border-teal-200 bg-teal-50 px-2 py-0.5 text-sm font-semibold text-teal-700">
                                 <span className="tabular-nums">
                                   {Object.keys(entry.diff).length}
                                 </span>

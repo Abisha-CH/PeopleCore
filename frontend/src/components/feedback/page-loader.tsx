@@ -36,7 +36,7 @@ export function PageLoader({
         </div>
       )}
 
-      <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+      <div className="rounded-xl border border-border/80 bg-card p-6 shadow-card">
         <div className="flex items-center justify-between gap-4">
           <Skeleton className="h-5 w-40" />
           <Skeleton className="h-9 w-24 rounded-md" />

@@ -3,6 +3,7 @@ import {
   CalendarDays,
   CheckCircle2,
   ClipboardCheck,
+  Eye,
   MoreHorizontal,
   Search,
   XCircle,
@@ -349,6 +350,7 @@ function RowActions({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => onView(request)}>
+          <Eye className="h-4 w-4" />
           View details
         </DropdownMenuItem>
         {canAction && (

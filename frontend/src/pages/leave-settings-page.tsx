@@ -62,6 +62,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/empty-state";
 import {
   useCreateHoliday,
@@ -454,75 +455,65 @@ function LeaveTypeFormBody({
 
 function EntitlementsTab() {
   const leaveTypes = useLeaveTypes();
-  const cappedTypes = (leaveTypes.data?.leaveTypes ?? []).filter(
-    (t) => t.isCapped,
-  );
-
   const [editTarget, setEditTarget] = useState<LeaveType | null>(null);
 
-  if (leaveTypes.isLoading) {
-    return (
-      <div className="py-8 text-center text-sm text-muted-foreground">
-        Loading…
-      </div>
-    );
-  }
-
-  if (leaveTypes.isError) {
-    return (
-      <div className="rounded-lg border border-destructive/30 bg-destructive-50 p-4 text-sm text-destructive">
-        Failed to load leave types.
-      </div>
-    );
-  }
-
-  if (cappedTypes.length === 0) {
-    return (
-      <div className="rounded-lg border border-dashed border-border bg-card/50">
-        <EmptyState
-          icon={Settings2}
-          title="No capped leave types"
-          description="Create a capped leave type first to configure entitlements."
-        />
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
-        Set the company-wide annual entitlement for each capped leave type.
-        Individual employee overrides take precedence.
-      </p>
+    <QueryState
+      data={leaveTypes.data}
+      isLoading={leaveTypes.isLoading}
+      isError={leaveTypes.isError}
+      error={leaveTypes.error}
+      refetch={() => void leaveTypes.refetch()}
+      isEmpty={(d) => d.leaveTypes.filter((t) => t.isCapped).length === 0}
+      empty={
+        <div className="rounded-lg border border-dashed border-border bg-card/50">
+          <EmptyState
+            icon={Settings2}
+            title="No capped leave types"
+            description="Create a capped leave type first to configure entitlements."
+          />
+        </div>
+      }
+    >
+      {() => (
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Set the company-wide annual entitlement for each capped leave type.
+            Individual employee overrides take precedence.
+          </p>
 
-      <div className="overflow-x-auto rounded-xl border border-border/80 bg-card shadow-card">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Leave type</TableHead>
-              <TableHead>Days per year</TableHead>
-              <TableHead className="w-[48px]">
-                <span className="sr-only">Actions</span>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {cappedTypes.map((type) => (
-              <EntitlementRow
-                key={type.leaveTypeId}
-                leaveType={type}
-                onEdit={setEditTarget}
-              />
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+          <div className="overflow-x-auto rounded-xl border border-border/80 bg-card shadow-card">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Leave type</TableHead>
+                  <TableHead>Days per year</TableHead>
+                  <TableHead className="w-[48px]">
+                    <span className="sr-only">Actions</span>
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {(leaveTypes.data?.leaveTypes ?? [])
+                  .filter((t) => t.isCapped)
+                  .map((type) => (
+                    <EntitlementRow
+                      key={type.leaveTypeId}
+                      leaveType={type}
+                      onEdit={setEditTarget}
+                    />
+                  ))}
+              </TableBody>
+            </Table>
+          </div>
 
-      <EntitlementEditDialog
-        leaveType={editTarget}
-        onDone={() => setEditTarget(null)}
-      />
-    </div>
+          <EntitlementEditDialog
+            leaveType={editTarget}
+            onDone={() => setEditTarget(null)}
+          />
+        </div>
+      )}
+    </QueryState>
   );
 }
 
@@ -540,7 +531,7 @@ function EntitlementRow({
       <TableCell className="font-medium">{leaveType.name}</TableCell>
       <TableCell className="tabular-nums">
         {entitlement.isLoading ? (
-          <span className="text-muted-foreground">Loading…</span>
+          <Skeleton className="h-4 w-10" />
         ) : (
           entitlement.data?.entitlement?.daysPerYear ??
           leaveType.defaultDaysPerYear

@@ -17,6 +17,7 @@ const badgeVariants = cva(
         destructive: "border-destructive-200 bg-destructive-50 text-destructive-700",
         info: "border-sky-200 bg-sky-50 text-sky-700",
         violet: "border-violet-200 bg-violet-50 text-violet-700",
+        teal: "border-teal-200 bg-teal-50 text-teal-700",
         neutral: "border-border bg-muted text-muted-foreground",
         default:
           "border-transparent bg-primary text-primary-foreground",

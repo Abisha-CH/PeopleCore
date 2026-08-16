@@ -92,7 +92,7 @@ export function SetupPage() {
 
         <div className="rounded-xl border border-border/80 bg-card p-7 shadow-card">
           <div className="mb-6 text-center">
-            <span className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+            <span className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-teal-700 text-white shadow-md shadow-teal-600/30">
               <ShieldCheck className="h-5 w-5" />
             </span>
             <h1 className="text-xl font-semibold text-foreground">

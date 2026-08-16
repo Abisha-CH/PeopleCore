@@ -2,9 +2,7 @@ import { useMemo, useState } from "react";
 import {
   CircleDollarSign,
   Eye,
-  MoreHorizontal,
   ReceiptText,
-  Search,
   Wallet,
 } from "lucide-react";
 
@@ -12,12 +10,6 @@ import { PageHeader } from "@/components/page-header";
 import { QueryState } from "@/components/feedback/query-state";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -146,46 +138,37 @@ export function MyPayslipsPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {payslips.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={6}>
-                        <EmptyState
-                          icon={Search}
-                          title="No payslips"
-                          description="Published payslips will appear here."
-                          tone="muted"
-                        />
+                  {pageData.map((payslip) => (
+                    <TableRow key={payslip.payslipId}>
+                      <TableCell>
+                        <span className="text-sm font-medium text-foreground">
+                          {monthYearLabel(payslip.month, payslip.year)}
+                        </span>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        <PayslipStatusBadge status={payslip.status} />
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell text-right text-sm tabular-nums text-muted-foreground">
+                        {formatCurrency(payslip.baseSalary)}
+                      </TableCell>
+                      <TableCell className="text-right text-sm font-semibold text-teal-700 tabular-nums">
+                        {formatCurrency(payslip.netSalary)}
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
+                        {formatDateTime(payslip.generatedAt)}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => setDetailTarget(payslip)}
+                          aria-label="View payslip"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
                       </TableCell>
                     </TableRow>
-                  ) : (
-                    pageData.map((payslip) => (
-                      <TableRow key={payslip.payslipId}>
-                        <TableCell>
-                          <span className="text-sm font-medium text-foreground">
-                            {monthYearLabel(payslip.month, payslip.year)}
-                          </span>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          <PayslipStatusBadge status={payslip.status} />
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell text-right text-sm tabular-nums text-muted-foreground">
-                          {formatCurrency(payslip.baseSalary)}
-                        </TableCell>
-                        <TableCell className="text-right text-sm font-semibold text-teal-700 tabular-nums">
-                          {formatCurrency(payslip.netSalary)}
-                        </TableCell>
-                        <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
-                          {formatDateTime(payslip.generatedAt)}
-                        </TableCell>
-                        <TableCell>
-                          <RowActions
-                            payslip={payslip}
-                            onView={setDetailTarget}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
+                  ))}
                 </TableBody>
               </Table>
             </div>
@@ -209,34 +192,5 @@ export function MyPayslipsPage() {
         }}
       />
     </div>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/* Row actions dropdown                                                        */
-/* -------------------------------------------------------------------------- */
-
-function RowActions({
-  payslip,
-  onView,
-}: {
-  payslip: Payslip;
-  onView: (payslip: Payslip) => void;
-}) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon-sm">
-          <MoreHorizontal className="h-4 w-4" />
-          <span className="sr-only">Actions</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => onView(payslip)}>
-          <Eye className="h-4 w-4" />
-          View payslip
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }

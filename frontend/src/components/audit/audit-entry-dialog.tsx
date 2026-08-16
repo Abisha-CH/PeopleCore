@@ -1,7 +1,7 @@
 import { FileText, ShieldCheck } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { RoleBadge } from "@/components/layout/role-badge";
 import {
   Dialog,
   DialogContent,
@@ -26,17 +26,6 @@ interface AuditEntryDialogProps {
   entry: AuditLogEntry | null;
   actorName?: string;
   onOpenChange: (open: boolean) => void;
-}
-
-const ROLE_BADGE_VARIANT: Record<string, "info" | "warning" | "neutral"> = {
-  admin: "info",
-  manager: "warning",
-};
-
-export function RoleBadge({ role }: { role: string }) {
-  return (
-    <Badge variant={ROLE_BADGE_VARIANT[role] ?? "neutral"}>{role}</Badge>
-  );
 }
 
 function formatDiffValue(value: unknown): string {
@@ -89,7 +78,7 @@ export function AuditEntryDialog({
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-sky-100 text-sky-700">
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-sky-700 text-white shadow-md shadow-sky-600/30">
               <ShieldCheck className="h-5 w-5" aria-hidden="true" />
             </div>
             <div>

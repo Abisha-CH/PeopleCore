@@ -5,7 +5,6 @@ import {
   ClipboardCheck,
   Eye,
   MoreHorizontal,
-  Search,
   X,
   XCircle,
 } from "lucide-react";
@@ -173,54 +172,41 @@ export function MyLeavePage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {requests.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={6}>
-                        <EmptyState
-                          icon={Search}
-                          title="No requests"
-                          description="Your submitted requests will be listed here."
-                          tone="muted"
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    pageData.map((request) => {
-                      const leaveType = leaveTypeMap.get(request.leaveTypeId);
-                      const canCancel = request.status === "pending";
-                      return (
-                        <TableRow key={request.leaveRequestId}>
-                          <TableCell className="hidden md:table-cell">
-                            <LeaveTypeBadge name={leaveType?.name} />
-                          </TableCell>
-                          <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
-                            {formatDateRange(
-                              request.startDate,
-                              request.endDate,
-                              request.isHalfDay,
-                            )}
-                          </TableCell>
-                          <TableCell className="tabular-nums">
-                            {request.numberOfDays}
-                          </TableCell>
-                          <TableCell>
-                            <LeaveStatusBadge status={request.status} />
-                          </TableCell>
-                          <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
-                            {formatDateTime(request.submittedAt)}
-                          </TableCell>
-                          <TableCell>
-                            <RowActions
-                              request={request}
-                              canCancel={canCancel}
-                              onView={setDetailTarget}
-                              onCancel={setCancelTarget}
-                            />
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })
-                  )}
+                  {pageData.map((request) => {
+                    const leaveType = leaveTypeMap.get(request.leaveTypeId);
+                    const canCancel = request.status === "pending";
+                    return (
+                      <TableRow key={request.leaveRequestId}>
+                        <TableCell className="hidden md:table-cell">
+                          <LeaveTypeBadge name={leaveType?.name} />
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                          {formatDateRange(
+                            request.startDate,
+                            request.endDate,
+                            request.isHalfDay,
+                          )}
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground tabular-nums">
+                          {request.numberOfDays}
+                        </TableCell>
+                        <TableCell>
+                          <LeaveStatusBadge status={request.status} />
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
+                          {formatDateTime(request.submittedAt)}
+                        </TableCell>
+                        <TableCell>
+                          <RowActions
+                            request={request}
+                            canCancel={canCancel}
+                            onView={setDetailTarget}
+                            onCancel={setCancelTarget}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>
